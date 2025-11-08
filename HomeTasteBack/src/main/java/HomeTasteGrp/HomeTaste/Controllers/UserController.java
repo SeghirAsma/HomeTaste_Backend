@@ -40,10 +40,10 @@ public class UserController {
         List<UserEntity> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
-    @PutMapping("archive/{id}")
+    @PutMapping("reject/{id}")
     public ResponseEntity<UserEntity> archiveUser(@PathVariable String id, @RequestBody Map<String, String> requestBody){
         String reason = requestBody.get("reason");
-        boolean success = userService.archiveUser(id, reason);
+        boolean success = userService.rejectUser(id, reason);
         if(success){
             return  ResponseEntity.ok().build();
         }

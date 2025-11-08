@@ -1,6 +1,7 @@
 package HomeTasteGrp.HomeTaste.Services;
 
 import HomeTasteGrp.HomeTaste.EmailSending.UserApprovedEvent;
+import HomeTasteGrp.HomeTaste.Models.Category;
 import HomeTasteGrp.HomeTaste.Models.CompleteProfile;
 import HomeTasteGrp.HomeTaste.Models.UserEntity;
 import HomeTasteGrp.HomeTaste.Repositories.CompleteProfileRepository;
@@ -38,12 +39,18 @@ public class CompleteProfileService {
     }
 
     public CompleteProfile createInfoSupp(String description, UserEntity authenticatedUser,
-                                          MultipartFile documentUrl, MultipartFile profileImgUrl, List<String> socialLinks) {
+                                          MultipartFile documentUrl, MultipartFile profileImgUrl, List<String> socialLinks,
+                                          String businessName,
+                                          Category businessType, Date dateOfBirth) {
         CompleteProfile profile = new CompleteProfile();
         profile.setDescription(description);
         profile.setUserEntity(authenticatedUser);
         profile.setSocialLinks(socialLinks);
+        profile.setBusinessName(businessName);
+        profile.setBusinessType(businessType);
+        profile.setDateOfBirth(dateOfBirth);
         profile.setSubmitted(true);
+        authenticatedUser.setSubmitted(true);
 
         try {
             String fileUrl = productService.saveFile(documentUrl);

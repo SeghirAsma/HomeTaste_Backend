@@ -129,7 +129,7 @@ public class UserService {
             return new ResponseEntity<>("Error approving user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    public boolean archiveUser(String id, String reason){
+    public boolean rejectUser(String id, String reason){
         if(userRepository.findById(id).isPresent()){
             UserEntity user= userRepository.findById(id).get();
             user.setDeleted(true);

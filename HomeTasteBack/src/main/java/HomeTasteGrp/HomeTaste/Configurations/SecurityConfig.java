@@ -47,9 +47,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()).authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/api/users/add/**","/api/users/all/**",
-                                        "/api/users/archive/{id}/**","/api/users/update/{userId}/**",
+                                       "/api/users/update/{userId}/**",
                                         "/api/auth/authenticate/**","/api/users/currentUser/**","/api/products/**").permitAll()
-                                .requestMatchers("/api/users/approve/{userId}/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/users/approve/{userId}/**",
+                                        "/api/users/reject/{id}/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

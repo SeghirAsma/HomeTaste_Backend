@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -24,4 +25,7 @@ public class CompleteProfile implements Serializable {
     private List<String> socialLinks;
     public String profileImgUrl;
     public boolean submitted = false;
+    public String businessName;
+    public Category businessType;
+    private Date dateOfBirth;
 }

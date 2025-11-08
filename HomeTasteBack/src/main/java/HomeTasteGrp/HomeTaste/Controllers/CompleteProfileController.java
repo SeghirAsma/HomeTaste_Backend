@@ -1,10 +1,12 @@
 package HomeTasteGrp.HomeTaste.Controllers;
 
 import HomeTasteGrp.HomeTaste.Configurations.UserInfoUserDetails;
+import HomeTasteGrp.HomeTaste.Models.Category;
 import HomeTasteGrp.HomeTaste.Models.CompleteProfile;
 import HomeTasteGrp.HomeTaste.Models.UserEntity;
 import HomeTasteGrp.HomeTaste.Services.CompleteProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -33,14 +36,18 @@ public class CompleteProfileController {
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam("documentUrl") MultipartFile documentUrl,
             @RequestParam("profileImgUrl") MultipartFile profileImgUrl,
-            @RequestParam("socialLinks") List<String> socialLinks) {
+            @RequestParam("socialLinks") List<String> socialLinks,
+            @RequestParam("businessName") String businessName,
+            @RequestParam("businessType") Category businessType,
+            @RequestParam("dateOfBirth")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateOfBirth) {
         if (userDetails.getAuthorities().stream()
                 .anyMatch(role -> role.getAuthority().equals("SELLER"))
         ) {
 
             UserEntity authenticatedUser = ((UserInfoUserDetails) userDetails).getUserEntity();
             CompleteProfile completeProfile = completeProfileService.createInfoSupp(
-                    description, authenticatedUser, documentUrl, profileImgUrl, socialLinks);
+                    description, authenticatedUser, documentUrl, profileImgUrl, socialLinks,
+                     businessName, businessType, dateOfBirth);
 
             return new ResponseEntity<>(completeProfile, HttpStatus.CREATED);
         } else {
