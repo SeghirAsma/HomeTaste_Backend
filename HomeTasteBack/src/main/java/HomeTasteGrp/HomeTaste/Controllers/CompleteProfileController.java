@@ -39,7 +39,7 @@ public class CompleteProfileController {
             @RequestParam("socialLinks") List<String> socialLinks,
             @RequestParam("businessName") String businessName,
             @RequestParam("businessType") Category businessType,
-            @RequestParam("dateOfBirth")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateOfBirth) {
+            @RequestParam("dateOfBirth")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date dateOfBirth) {
         if (userDetails.getAuthorities().stream()
                 .anyMatch(role -> role.getAuthority().equals("SELLER"))
         ) {
