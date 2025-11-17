@@ -2,6 +2,7 @@ package HomeTasteGrp.HomeTaste.Controllers;
 
 import HomeTasteGrp.HomeTaste.Configurations.UserInfoUserDetails;
 import HomeTasteGrp.HomeTaste.Models.UserEntity;
+import HomeTasteGrp.HomeTaste.ModelsDTO.SellerInfoDTO;
 import HomeTasteGrp.HomeTaste.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,4 +75,23 @@ public class UserController {
         }
         return null;
     }
+
+
+    @GetMapping("/UsersNotApproved")
+    public List<SellerInfoDTO> notApprovedUsers() {
+        return userService.getNotApprovedUsers();
+    }
+
+    @GetMapping("/UsersRejected")
+    public ResponseEntity<List<UserEntity>> getUsersNotApproved() {
+        List<UserEntity> users = userService.getUsersRejected();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/UsersApproved")
+    public ResponseEntity<List<UserEntity>> getApprovedSellers() {
+        List<UserEntity> users = userService.getApprovedSellers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
 }

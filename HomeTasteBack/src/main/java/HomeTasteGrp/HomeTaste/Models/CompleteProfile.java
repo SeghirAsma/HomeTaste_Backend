@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -27,5 +28,5 @@ public class CompleteProfile implements Serializable {
     public boolean submitted = false;
     public String businessName;
     public Category businessType;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 }

@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface CompleteProfileRepository extends MongoRepository<CompleteProfile,String> {
     Optional<CompleteProfile> findByUserEntity(UserEntity userEntity);
+    CompleteProfile findByUserEntity_Id(String userId);
 }

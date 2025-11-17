@@ -1,8 +1,11 @@
 package HomeTasteGrp.HomeTaste.Services;
 
 import HomeTasteGrp.HomeTaste.EmailSending.UserApprovedEvent;
+import HomeTasteGrp.HomeTaste.Models.CompleteProfile;
 import HomeTasteGrp.HomeTaste.Models.UserEntity;
 import HomeTasteGrp.HomeTaste.Models.UserRejection;
+import HomeTasteGrp.HomeTaste.ModelsDTO.SellerInfoDTO;
+import HomeTasteGrp.HomeTaste.Repositories.CompleteProfileRepository;
 import HomeTasteGrp.HomeTaste.Repositories.UserRejectionRepository;
 import HomeTasteGrp.HomeTaste.Repositories.UserRepository;
 import jakarta.mail.MessagingException;
@@ -22,18 +25,22 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    @Autowired
     private final UserRepository userRepository;
     private final UserRejectionRepository userRejectionRepository;
+    private CompleteProfileRepository completeProfileRepository;
     private final JavaMailSender emailSender;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
     @Autowired
-    private UserService(UserRepository userRepository,JavaMailSender emailSender,UserRejectionRepository userRejectionRepositor){
+    private UserService(UserRepository userRepository,JavaMailSender emailSender,
+                        UserRejectionRepository userRejectionRepositor,CompleteProfileRepository completeProfileRepository){
         this.userRepository=userRepository;
         this.emailSender=emailSender;
         this.userRejectionRepository=userRejectionRepositor;
+        this.completeProfileRepository = completeProfileRepository;
     }
     public List<UserEntity> getAllUsers(){
         return userRepository.findAll();
@@ -178,5 +185,44 @@ public class UserService {
         }
         return  false;
     }
+
+
+    public List<SellerInfoDTO> getNotApprovedUsers() {
+        List<UserEntity> users = userRepository.findByApprovedFalseAndIsDeletedFalse();
+
+        return users.stream()
+                .map(user -> completeProfileRepository.findByUserEntity_Id(user.getId()))
+                .filter(profile -> profile != null && profile.isSubmitted())
+                .map(profile -> {
+                    UserEntity user = profile.getUserEntity();
+                    return new SellerInfoDTO(
+                            user.getId(),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            user.getEmail(),
+                            user.getPhoneNumber(),
+                            user.isApproved(),
+                            user.isDeleted(),
+                            profile.getBusinessName(),
+                            profile.getDateOfBirth(),
+                            profile.getProfileImgUrl(),
+                            profile.getDescription(),
+                            profile.getDocumentUrl(),
+                            profile.getSocialLinks(),
+                            profile.getBusinessType() != null ? profile.getBusinessType().toString() : null,
+                            user.getAddress()
+                    );
+                })
+                .toList();
+    }
+
+    public List<UserEntity> getUsersRejected(){
+        return userRepository.findByIsDeletedTrue();
+    }
+
+    public List<UserEntity> getApprovedSellers() {
+        return userRepository.findByApprovedTrueAndRole("SELLER");
+    }
+
 
 }

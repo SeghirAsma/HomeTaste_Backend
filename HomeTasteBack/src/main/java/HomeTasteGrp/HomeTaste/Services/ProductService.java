@@ -100,24 +100,25 @@ public class ProductService {
         }
     }
     //saving file
-    public String saveFile(MultipartFile fileNameProduct) throws IOException {
+    public String saveFile(MultipartFile file) throws IOException {
+        // Assurez-vous que le dossier existe
         File directory = new File(uploadDir);
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
-        // Générez un nom de fichier unique
-        String fileName = StringUtils.cleanPath(fileNameProduct.getOriginalFilename());
-        String uniqueFileName = fileName;
+        // Nettoyer le nom du fichier et ajouter un identifiant unique pour éviter les collisions
+        String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
 
-        // Chemin complet du fichier sur le serveur
-        Path targetPath = Path.of(uploadDir, uniqueFileName);
+        // Chemin complet sur le serveur
+        Path targetPath = Path.of(directory.getAbsolutePath(), uniqueFileName);
 
-        // Copiez le fichier vers le répertoire de stockage
-        Files.copy(fileNameProduct.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-        // Retournez l'URL ou le chemin du fichier
-        return uploadDir + uniqueFileName;
+        // Copier le fichier
+        Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
+        // Retourner l’URL publique pour le frontend
+        return "http://localhost:8084/images/" + uniqueFileName;
     }
 
     //loading resource

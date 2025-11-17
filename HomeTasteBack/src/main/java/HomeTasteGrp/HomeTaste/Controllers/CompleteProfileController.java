@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -36,10 +37,10 @@ public class CompleteProfileController {
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam("documentUrl") MultipartFile documentUrl,
             @RequestParam("profileImgUrl") MultipartFile profileImgUrl,
-            @RequestParam("socialLinks") List<String> socialLinks,
+            @RequestParam(value = "socialLinks", required = false) List<String> socialLinks,
             @RequestParam("businessName") String businessName,
             @RequestParam("businessType") Category businessType,
-            @RequestParam("dateOfBirth")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date dateOfBirth) {
+            @RequestParam("dateOfBirth")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateOfBirth) {
         if (userDetails.getAuthorities().stream()
                 .anyMatch(role -> role.getAuthority().equals("SELLER"))
         ) {

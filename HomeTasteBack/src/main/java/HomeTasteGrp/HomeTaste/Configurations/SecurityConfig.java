@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
@@ -46,11 +48,13 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()).authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
+                                .requestMatchers("/images/**").permitAll()
                                 .requestMatchers("/api/users/add/**","/api/users/all/**",
                                        "/api/users/update/{userId}/**",
                                         "/api/auth/authenticate/**","/api/users/currentUser/**","/api/products/**").permitAll()
                                 .requestMatchers("/api/users/approve/{userId}/**",
-                                        "/api/users/reject/{id}/**").hasAuthority("ADMIN")
+                                        "/api/users/reject/{id}/**", "/api/users/UsersNotApproved/**",
+                                        "/api/users/UsersRejected/**", "/api/users/UsersApproved/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
@@ -88,7 +92,8 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
+
+
 }

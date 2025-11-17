@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +42,7 @@ public class CompleteProfileService {
     public CompleteProfile createInfoSupp(String description, UserEntity authenticatedUser,
                                           MultipartFile documentUrl, MultipartFile profileImgUrl, List<String> socialLinks,
                                           String businessName,
-                                          Category businessType, Date dateOfBirth) {
+                                          Category businessType, LocalDate dateOfBirth) {
         CompleteProfile profile = new CompleteProfile();
         profile.setDescription(description);
         profile.setUserEntity(authenticatedUser);

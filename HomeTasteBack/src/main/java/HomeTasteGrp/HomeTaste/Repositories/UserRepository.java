@@ -11,5 +11,8 @@ import java.util.Optional;
 public interface UserRepository extends MongoRepository<UserEntity, String> {
     Optional<UserEntity> findByEmail(String email);
     List<UserEntity> findByApprovedFalseAndIsDeletedFalse();
+    List<UserEntity> findByIsDeletedTrue();
+    List<UserEntity> findByApprovedTrueAndRole(String role);
+
 
 }
